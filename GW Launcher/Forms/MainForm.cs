@@ -1,4 +1,4 @@
-﻿using GW_Launcher.Properties;
+using GW_Launcher.Properties;
 using Microsoft.Win32;
 using GW_Launcher.Guildwars;
 
@@ -277,12 +277,17 @@ public partial class MainForm : Form
 
     private void ToolStripMenuItemAddNew_Click(object sender, EventArgs e)
     {
+        var oldKeepOpen = _keepOpen;
+        _keepOpen = true;
         using var gui = new AddAccountForm();
         gui.ShowDialog();
+        _keepOpen = oldKeepOpen;
     }
 
     private void ToolStripMenuItemRemoveSelected_Click(object sender, EventArgs e)
     {
+        var oldKeepOpen = _keepOpen;
+        _keepOpen = true;
         if (MessageBox.Show(@"Are you sure you want to remove the selected accounts?", @"Remove Accounts",
             MessageBoxButtons.YesNo) != DialogResult.Yes)
         {
@@ -298,6 +303,7 @@ public partial class MainForm : Form
         Program.accounts.Save();
         RefreshUI();
         Program.mutex.ReleaseMutex();
+        _keepOpen = oldKeepOpen;
     }
 
     private void ToolStripMenuItemLaunchGWInstance_Click(object sender, EventArgs e)
@@ -322,14 +328,19 @@ public partial class MainForm : Form
 
     private void ToolStripMenuItemRefreshAccounts_Click(object sender, EventArgs e)
     {
+        var oldKeepOpen = _keepOpen;
+        _keepOpen = true;
         Program.mutex.WaitOne();
         Program.accounts.Load("Accounts.json");
         RefreshUI();
         Program.mutex.ReleaseMutex();
+        _keepOpen = oldKeepOpen;
     }
 
     private void ToolStripMenuItemEditSelected_Click(object sender, EventArgs e)
     {
+        var oldKeepOpen = _keepOpen;
+        _keepOpen = true;
         _selectedItems = listViewAccounts.SelectedIndices;
         if (_selectedItems.Count == 0 && listViewAccounts.FocusedItem == null)
         {
@@ -355,6 +366,7 @@ public partial class MainForm : Form
         addAccountForm.account = account;
 
         addAccountForm.ShowDialog();
+        _keepOpen = oldKeepOpen;
     }
 
     private void ToolStripMenuItemMoveUp_Click(object sender, EventArgs e)
