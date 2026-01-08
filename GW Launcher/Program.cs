@@ -673,7 +673,11 @@ internal static class Program
             foreach (var account in accounts)
             {
                 if (accsChecked.Select(a => a.gwpath).Contains(account.gwpath)) continue;
-                if (!File.Exists(account.gwpath)) continue;
+                if (!File.Exists(account.gwpath))
+                {
+                    accsToUpdate.Add(account);
+                    continue;
+                }
 
                 // Get file size
                 long currentSize;
@@ -697,7 +701,11 @@ internal static class Program
                 accsToUpdate.Add(account);
             }
 
-            if (accsToUpdate.Count == 0) return;
+            if (accsToUpdate.Count == 0)
+            {
+                MessageBox.Show($"No accounts are out of date.", "GW Update");
+                return;
+            }
             var accNames = string.Join(',', accsToUpdate.Select(acc => acc.Name));
             var ok = MessageBox.Show($"Accounts {accNames} are out of date. Update now?", "GW Update",
                 MessageBoxButtons.YesNo);
