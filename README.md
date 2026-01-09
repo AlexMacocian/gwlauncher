@@ -68,6 +68,30 @@ This format is fairly straight forward, modify the account info of the selected 
 
 * * *
 
+### Multi-Boxing (Running Multiple Accounts Simultaneously)
+
+To run multiple Guild Wars accounts at the same time, you need to create separate game installations:
+
+1. **Copy your existing Guild Wars installation:**
+   - Locate your current Guild Wars folder (e.g., `C:\Program Files (x86)\Guild Wars\`)
+   - Copy the entire folder to a new location (e.g., `C:\Program Files (x86)\Guild Wars (Copy 2)\`, `C:\Program Files (x86)\Guild Wars (Copy 3)\`, etc.)
+   - **Important:** Each copy must include both `Gw.exe` and `Gw.dat` files
+
+2. **Add accounts for each installation:**
+   - Right-click the account list and select _Add New_
+   - Fill in the account details
+   - In the "GW Path" field, point to the `Gw.exe` in the newly copied folder
+   - Repeat for each account you want to run simultaneously
+
+3. **Launch multiple instances:**
+   - Double-click each account in the list to launch them
+   - Each account will run from its own Guild Wars installation folder
+   - The "Active" column will show which accounts are currently running
+
+**Note:** Each Guild Wars installation will share the same layout/preferences as the original initially, but settings and screenshots will be stored separately in each folder.
+
+* * *
+
 ### Settings
 
 There are three settings that you can change in the file Settings.json (open with a text editor like Notepad):
