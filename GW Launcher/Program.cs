@@ -2,6 +2,7 @@
 using GW_Launcher.Guildwars;
 using Octokit;
 using System.IO;
+using System.Security.Cryptography.Pkcs;
 using Account = GW_Launcher.Classes.Account;
 using Application = System.Windows.Forms.Application;
 using Assembly = System.Reflection.Assembly;
@@ -705,8 +706,20 @@ internal static class Program
                 }
                 catch(Exception e)
                 {
-                    Console.WriteLine($"Error checking version for {account.gwpath}: {e}");
-                    continue;
+                    try
+                    {
+                        var currentFileId = await parser.GetVersionLegacy(CancellationToken.None);
+                        if (currentFileId == latestFileId)
+                        {
+                            continue;
+                        }
+                    }
+                    catch(Exception e2)
+                    {
+                        var exWrapper = new AggregateException(e, e2);
+                        Console.WriteLine($"Error checking version for {account.gwpath}: {exWrapper}");
+                        continue;
+                    }
                 }
 
                 accsToUpdate.Add(account);
