@@ -42,13 +42,22 @@ internal static class Program
 
 	public static string? GetProcessPath(Process process)
     {
-		
-		var fileNameBuilder = new StringBuilder(1024);
-        var bufferLength = (uint)fileNameBuilder.Capacity + 1;
-        return QueryFullProcessImageName(process.Handle, 0, fileNameBuilder, ref bufferLength) ?
-            fileNameBuilder.ToString() :
-            null;
+        try
+        {
+            if (process.HasExited)
+                return default;
 
+            var fileNameBuilder = new StringBuilder(1024);
+            var bufferLength = (uint)fileNameBuilder.Capacity + 1;
+            return QueryFullProcessImageName(process.Handle, 0, fileNameBuilder, ref bufferLength) ?
+                fileNameBuilder.ToString() :
+                null;
+        }
+		catch(InvalidOperationException)
+        {
+            // Process has exited in between the check and the query
+            return default;
+        }    
     }
 
 	static bool IsProcessOpen(string name)
