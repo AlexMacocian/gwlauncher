@@ -675,7 +675,7 @@ internal static class Program
                 return;
             }
 
-            var latestSize = response.Value.SizeDecompressed;
+            var latestFileId = response.Value.FileId;
             var accsToUpdate = new List<Account>();
             var accsChecked = new List<Account>();
 
@@ -688,22 +688,24 @@ internal static class Program
                     continue;
                 }
 
-                // Get file size
-                long currentSize;
-                try
+                accsChecked.Add(account);
+                if (GuildWarsExecutableParser.TryParse(account.gwpath) is not GuildWarsExecutableParser parser)
                 {
-                    var fileInfo = new FileInfo(account.gwpath);
-                    currentSize = fileInfo.Length;
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error getting file size for {account.gwpath}: {ex.Message}");
+                    Console.WriteLine($"Failed to parse Guild Wars executable at {account.gwpath}");
                     continue;
                 }
 
-                accsChecked.Add(account);
-                if (currentSize == latestSize)
+                try
                 {
+                    var currentFileId = await parser.GetFileId(CancellationToken.None);
+                    if (currentFileId == latestFileId)
+                    {
+                        continue;
+                    }
+                }
+                catch(Exception e)
+                {
+                    Console.WriteLine($"Error checking version for {account.gwpath}: {e}");
                     continue;
                 }
 
